@@ -10,7 +10,7 @@ After telling me your usernames I will then add you as collaborators.
 
 In order to upload files you will need to do the following:
 
-1. Download the Windows GitHUb client
+1. Download the Windows GitHub client
 2. Follow the setup process
 3. Create a local repository with the same name (neclear-motors) or create a clone
 4. In options choose the default shell you prefer (I chose Git Bash; PowerShell didn't work properly)
