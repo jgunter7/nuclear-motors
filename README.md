@@ -21,4 +21,4 @@ In order to upload files you will need to do the following:
   3. git commint -m "My commit message"
 7. Congratulations you are now even more integrated with the programming subculture!
 
-P.S. In order to get the project template to work download and install Microsoft Server 2012 Developer Edition
+P.S. In order to get the project template to work download and install Microsoft Server 2012 Developer Edition.
