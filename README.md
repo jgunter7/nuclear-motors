@@ -17,7 +17,7 @@ In order to upload files you will need to do the following:
 5. Open the repository in Git Shell
 6. Issue commands:
   1. git push
-  2. git add 'files' (make sure files are the local repository)
+  2. git add 'files' (make sure files are in the local repository)
   3. git commint -m "My commit message"
 7. Congratulations you are now even more integrated with the programming subculture!
 
