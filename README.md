@@ -24,4 +24,12 @@ In order to upload files you will need to do the following:
 P.S. In order to get the project template to work download and install Microsoft Server 2012 Developer Edition.
 P.P.S Also in order to get the project to connect to MS Server, you will need your instance name of your local SQL Server.
 ex. JG-PC\JSQL
-(host)\(instance name)
+
+You will also need to add a user for the website to log into the db with:
+In SQL Server Management Studio:
+1. Expand current server
+2. Expand "Security"
+3. Right click "Logins", select "New Login..."
+4. Choose "SQL Server Authentication" - enter a username and password
+5. Click "OK" to create the user
+
