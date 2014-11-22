@@ -22,3 +22,6 @@ In order to upload files you will need to do the following:
 7. Congratulations you are now even more integrated with the programming subculture!
 
 P.S. In order to get the project template to work download and install Microsoft Server 2012 Developer Edition.
+P.P.S Also in order to get the project to connect to MS Server, you will need your instance name of your local SQL Server.
+ex. JG-PC\JSQL
+(host)\(instance name)
