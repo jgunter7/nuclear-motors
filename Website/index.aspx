@@ -83,14 +83,4 @@
         <!-- /slideshow -->
     </div>
     <!-- /container -->
-    <script src="js/classie.js"></script>
-    <script src="js/tiltSlider.js"></script>
-    <script>
-        new TiltSlider(document.getElementById('slideshow'));
-		</script>
-    <script src="js/cbpHorizontalSlideOutMenu.min.js"></script>
-    <!-- SLIDE CONTROL FOR MENU-->
-    <script>
-        var menu = new cbpHorizontalSlideOutMenu(document.getElementById('cbp-hsmenu-wrapper'));
-		</script>
 </asp:Content>
