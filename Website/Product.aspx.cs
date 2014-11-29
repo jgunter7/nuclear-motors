@@ -12,12 +12,14 @@ public partial class Product : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
         int pId = 0;
         try { pId = int.Parse(Request.QueryString["pId"]); }
         catch { pId = 0; }
         string connStr = ConfigurationManager.ConnectionStrings["jgcon"].ConnectionString;
-        try
-        {
+       // try
+        //{
             SqlConnection curCon = new SqlConnection(connStr);
             curCon.Open();
             if (pId == 0)
@@ -25,20 +27,41 @@ public partial class Product : System.Web.UI.Page
                 SqlCommand cmd = new SqlCommand("select * from tblProducts", curCon);
                 SqlDataReader reader;
                 reader = cmd.ExecuteReader();
+                int ids = 1;
                 while (reader.Read())
                 {
                     Label curID = new Label();
                     curID.Text = reader["productId"].ToString();
-                    pnlAllProd.Controls.Add(curID);
                     Label curName = new Label();
                     curName.Text = reader["productDesc"].ToString();
-                    pnlAllProd.Controls.Add(curName);
-                    Image curImg = new Image();
+                    HyperLink curImg = new HyperLink();
+                    curImg.NavigateUrl = "Product.aspx?pId=" + ids++;
                     curImg.ImageUrl = reader["productImg"].ToString();
-                    pnlAllProd.Controls.Add(curImg);
                     Label curPrice = new Label();                 
                     curPrice.Text = String.Format("{0:C2}", reader["productPrice"]);
-                    pnlAllProd.Controls.Add(curPrice);
+                    Table lTab = new Table();
+                    lTab.Style.Add("display", "inline-flex");
+                    lTab.Style.Add("width", "380px");
+                    TableRow lRow = new TableRow();
+                    TableCell lCell = new TableCell();
+                    TableCell lCell2 = new TableCell();
+                    lCell.Controls.Add(curImg);
+                    lRow.Controls.Add(lCell);
+                    Table rTab = new Table();
+                    TableRow rRow = new TableRow();
+                    TableCell rCell = new TableCell();
+                    rCell.Controls.Add(curName);
+                    rRow.Cells.Add(rCell);
+                    rTab.Rows.Add(rRow);                    
+                    rRow = new TableRow();
+                    rCell = new TableCell();
+                    rCell.Controls.Add(curPrice);
+                    rRow.Cells.Add(rCell);
+                    rTab.Rows.Add(rRow);
+                    lCell2.Controls.Add(rTab);
+                    lRow.Cells.Add(lCell2);
+                    lTab.Rows.Add(lRow);
+                    pnlAllProd.Controls.Add(lTab);
                 }
                 reader.Close();
             }
@@ -56,7 +79,9 @@ public partial class Product : System.Web.UI.Page
                 reader.Close();
             }            
             curCon.Close();
-        }
-        catch { System.IO.File.AppendAllText(@"c:\web\log.txt", "\nProduct - Page_Load :: Could not connect to database"); }
+        //}
+        //catch (Exception ex) { System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: " + ex.Message + Environment.NewLine); }
+        sw.Stop();
+        System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: Total Time= " + sw.ElapsedMilliseconds + "ms" + Environment.NewLine);
     }
 }

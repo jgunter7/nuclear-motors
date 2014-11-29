@@ -11,6 +11,9 @@
     <asp:Label ID="prodName" runat="server" />
     <asp:Image ID="prodImg" runat="server" />
     <asp:Label ID="prodPrice" runat="server" />
-    <%} %>
-    <asp:Panel ID="pnlAllProd" runat="server" />     
+    <%} else {%>
+    <div id="AllProds" style="margin-left:auto;margin-right:auto;display:block;width:80%;">
+    <asp:Panel ID="pnlAllProd" runat="server" />
+    </div>
+    <%} %>     
 </asp:Content>
