@@ -80,7 +80,11 @@
                 </li>
             </ol>
         </div>
-        <!-- /slideshow -->
+        <!-- /slideshow -->  
+    <script src="js/tiltSlider.js"></script>
+    <script>
+        new TiltSlider(document.getElementById('slideshow'));
+    </script>
     </div>
     <!-- /container -->
 </asp:Content>
