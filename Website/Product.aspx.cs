@@ -18,8 +18,8 @@ public partial class Product : System.Web.UI.Page
         try { pId = int.Parse(Request.QueryString["pId"]); }
         catch { pId = 0; }
         string connStr = ConfigurationManager.ConnectionStrings["jgcon"].ConnectionString;
-       // try
-        //{
+        try
+        {
             SqlConnection curCon = new SqlConnection(connStr);
             curCon.Open();
             if (pId == 0)
@@ -36,7 +36,7 @@ public partial class Product : System.Web.UI.Page
                     curName.Text = reader["productDesc"].ToString();
                     HyperLink curImg = new HyperLink();
                     curImg.NavigateUrl = "Product.aspx?pId=" + ids++;
-                    curImg.ImageUrl = reader["productImg"].ToString();
+                    curImg.ImageUrl = reader["productIcon"].ToString();
                     Label curPrice = new Label();                 
                     curPrice.Text = String.Format("{0:C2}", reader["productPrice"]);
                     Table lTab = new Table();
@@ -72,15 +72,14 @@ public partial class Product : System.Web.UI.Page
                 SqlDataReader reader;
                 reader = cmd.ExecuteReader();
                 reader.Read();
-                prodId.Text = reader["productId"].ToString();
                 prodName.Text = reader["productDesc"].ToString();
                 prodImg.ImageUrl = reader["productImg"].ToString();
                 prodPrice.Text = String.Format("{0:C2}", reader["productPrice"]);
                 reader.Close();
             }            
             curCon.Close();
-        //}
-        //catch (Exception ex) { System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: " + ex.Message + Environment.NewLine); }
+        }
+        catch (Exception ex) { System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: " + ex.Message + Environment.NewLine); }
         sw.Stop();
         System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: Total Time= " + sw.ElapsedMilliseconds + "ms" + Environment.NewLine);
     }

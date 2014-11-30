@@ -3,17 +3,34 @@
 <asp:Content ID="mainContent" ContentPlaceHolderID="content" runat="server">
     <% int pID;
        try { pID = int.Parse(Request.QueryString["pId"]); }
-       catch { pID = 0; } 
-       if (pID != 0) 
+       catch { pID = 0; }
+       if (pID != 0)
        {
-       %>
-    <asp:Label ID="prodId" runat="server" />
-    <asp:Label ID="prodName" runat="server" />
-    <asp:Image ID="prodImg" runat="server" />
-    <asp:Label ID="prodPrice" runat="server" />
-    <%} else {%>
-    <div id="AllProds" style="margin-left:auto;margin-right:auto;display:block;width:80%;">
-    <asp:Panel ID="pnlAllProd" runat="server" />
+    %>
+    <div id="singleProd">
+        <table id="singleTbl">
+            <tr>
+                <td colspan="3">
+                       <asp:Label ID="prodName" runat="server" /></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                        <asp:Image ID="prodImg" runat="server" CssClass="centerCrop" />
+                </td>
+            </tr>
+            <tr>
+                <td>Current Price:</td>
+                <td>
+                    <asp:Label ID="prodPrice" runat="server" /></td>
+                <td>Add to Cart!</td>
+            </tr>
+        </table>
     </div>
-    <%} %>     
+    <%}
+       else
+       {%>
+    <div id="AllProds">
+        <asp:Panel ID="pnlAllProd" runat="server" />
+    </div>
+    <%} %>
 </asp:Content>
