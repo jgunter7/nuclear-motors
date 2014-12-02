@@ -24,10 +24,15 @@ public partial class Product : System.Web.UI.Page
             curCon.Open();
             if (pId == 0)
             {
-                SqlCommand cmd = new SqlCommand("select * from tblProducts", curCon);
+                SqlCommand cmd;
+                if (sorting.SelectedValue == "Price: High - Low")
+                    cmd = new SqlCommand("select * from tblProducts Order By productPrice DESC", curCon);
+                else if (sorting.SelectedValue == "Price: Low - High")
+                    cmd = new SqlCommand("select * from tblProducts Order By productPrice ASC", curCon);
+                else
+                    cmd = new SqlCommand("select * from tblProducts", curCon);
                 SqlDataReader reader;
                 reader = cmd.ExecuteReader();
-                int ids = 1;
                 while (reader.Read())
                 {
                     Label curID = new Label();
@@ -35,9 +40,9 @@ public partial class Product : System.Web.UI.Page
                     Label curName = new Label();
                     curName.Text = reader["productDesc"].ToString();
                     HyperLink curImg = new HyperLink();
-                    curImg.NavigateUrl = "Product.aspx?pId=" + ids++;
+                    curImg.NavigateUrl = "Product.aspx?pId=" + curID.Text;
                     curImg.ImageUrl = reader["productIcon"].ToString();
-                    Label curPrice = new Label();                 
+                    Label curPrice = new Label();
                     curPrice.Text = String.Format("{0:C2}", reader["productPrice"]);
                     Table lTab = new Table();
                     lTab.Style.Add("display", "inline-flex");
@@ -52,7 +57,7 @@ public partial class Product : System.Web.UI.Page
                     TableCell rCell = new TableCell();
                     rCell.Controls.Add(curName);
                     rRow.Cells.Add(rCell);
-                    rTab.Rows.Add(rRow);                    
+                    rTab.Rows.Add(rRow);
                     rRow = new TableRow();
                     rCell = new TableCell();
                     rCell.Controls.Add(curPrice);
@@ -76,7 +81,7 @@ public partial class Product : System.Web.UI.Page
                 prodImg.ImageUrl = reader["productImg"].ToString();
                 prodPrice.Text = String.Format("{0:C2}", reader["productPrice"]);
                 reader.Close();
-            }            
+            }
             curCon.Close();
         }
         catch (Exception ex) { System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: " + ex.Message + Environment.NewLine); }

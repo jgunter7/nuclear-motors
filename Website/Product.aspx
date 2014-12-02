@@ -26,11 +26,18 @@
             </tr>
         </table>
     </div>
-    <%}
+<%}
        else
        {%>
     <div id="AllProds">
+        <form id="form1" runat="server">
+                    <asp:DropDownList ID="sorting" runat="server" AutoPostBack="True">
+            <asp:ListItem Selected="True">No Sort</asp:ListItem>
+            <asp:ListItem>Price: High - Low</asp:ListItem>
+            <asp:ListItem>Price: Low - High</asp:ListItem>
+        </asp:DropDownList>
+            </form>
         <asp:Panel ID="pnlAllProd" runat="server" />
     </div>
-    <%} %>
+<%} %>
 </asp:Content>

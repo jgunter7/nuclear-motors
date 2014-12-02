@@ -20,7 +20,7 @@
         <header class="clearfix">
             <h1>Nuclear Motors</h1>
             <nav>
-                <span class="fa-stack fa-lg"><a href="#" data-info="Home">
+                <span class="fa-stack fa-lg"><a href="index.aspx" data-info="Home">
                     <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
                     <i class="fa fa-home fa-stack-1x"></i></a>
                 </span>&nbsp;
@@ -36,7 +36,7 @@
                         <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
                         <i class="fa fa-comment fa-stack-1x"></i></a>
                     </span>&nbsp;
-					<span class="fa-stack fa-lg"><a href="#" data-info="Cart">
+					<span class="fa-stack fa-lg"><a href="Cart.aspx" data-info="Cart">
                         <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
                         <i class="fa fa-shopping-cart fa-stack-1x"></i></a>
                     </span>
