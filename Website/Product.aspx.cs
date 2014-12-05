@@ -35,38 +35,42 @@ public partial class Product : System.Web.UI.Page
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Label curID = new Label();
-                    curID.Text = reader["productId"].ToString();
+                    Button addCart = new Button();
+                    addCart.Text = "Add to Cart!";
+                    addCart.ID = reader["productId"].ToString();
+                    addCart.Click += addCart_Click;
                     Label curName = new Label();
                     curName.Text = reader["productDesc"].ToString();
                     HyperLink curImg = new HyperLink();
-                    curImg.NavigateUrl = "Product.aspx?pId=" + curID.Text;
+                    curImg.NavigateUrl = "Product.aspx?pId=" + reader["productId"].ToString();
                     curImg.ImageUrl = reader["productIcon"].ToString();
                     Label curPrice = new Label();
                     curPrice.Text = String.Format("{0:C2}", reader["productPrice"]);
-                    Table lTab = new Table();
-                    lTab.Style.Add("display", "inline-flex");
-                    lTab.Style.Add("width", "380px");
-                    TableRow lRow = new TableRow();
-                    TableCell lCell = new TableCell();
-                    TableCell lCell2 = new TableCell();
-                    lCell.Controls.Add(curImg);
-                    lRow.Controls.Add(lCell);
-                    Table rTab = new Table();
-                    TableRow rRow = new TableRow();
-                    TableCell rCell = new TableCell();
-                    rCell.Controls.Add(curName);
-                    rRow.Cells.Add(rCell);
-                    rTab.Rows.Add(rRow);
-                    rRow = new TableRow();
-                    rCell = new TableCell();
-                    rCell.Controls.Add(curPrice);
-                    rRow.Cells.Add(rCell);
-                    rTab.Rows.Add(rRow);
-                    lCell2.Controls.Add(rTab);
-                    lRow.Cells.Add(lCell2);
-                    lTab.Rows.Add(lRow);
-                    pnlAllProd.Controls.Add(lTab);
+                    Table main = new Table();
+                    TableRow tRow = new TableRow();
+                    TableCell tCell = new TableCell();
+                    tCell.Controls.Add(curImg);
+                    tCell.ColumnSpan = 2;
+                    tRow.Cells.Add(tCell);
+                    main.Rows.Add(tRow);
+                    tRow = new TableRow();
+                    tCell = new TableCell();
+                    tCell.Controls.Add(curName);
+                    tCell.ColumnSpan = 2;
+                    tRow.Cells.Add(tCell);
+                    main.Rows.Add(tRow);
+                    tRow = new TableRow();
+                    tCell = new TableCell();
+                    tCell.Controls.Add(curPrice);
+                    tRow.Cells.Add(tCell);
+                    tCell = new TableCell();
+                    tCell.Controls.Add(addCart);
+                    tRow.Cells.Add(tCell);
+                    main.Rows.Add(tRow);
+                    main.Style.Add("display", "inline-flex");
+                    main.Style.Add("width", "380px");
+                    main.Style.Add("text-align", "center");
+                    pnlAllProd.Controls.Add(main);
                 }
                 reader.Close();
             }
@@ -87,5 +91,12 @@ public partial class Product : System.Web.UI.Page
         catch (Exception ex) { System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: " + ex.Message + Environment.NewLine); }
         sw.Stop();
         System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: Total Time= " + sw.ElapsedMilliseconds + "ms" + Environment.NewLine);
+    }
+
+    private void addCart_Click(object sender, EventArgs e)
+    {
+        Button btn = (Button)sender;
+        string prodId = btn.ID;
+
     }
 }
