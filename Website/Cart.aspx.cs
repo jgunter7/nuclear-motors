@@ -11,9 +11,11 @@ public partial class Cart : System.Web.UI.Page
 {
     int orderId = 0;
     string connStr = "";
+    decimal orderTotal = 0.00M;
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        paypal.Visible = false;
         int cId = 0;
         try { cId = int.Parse(this.Session["cID"].ToString()); }
         catch { cId = 0; }
@@ -21,7 +23,7 @@ public partial class Cart : System.Web.UI.Page
             Response.Redirect("Login.aspx");
         connStr = ConfigurationManager.ConnectionStrings["jgcon"].ConnectionString;
 
-        decimal orderTotal = 0.00M;
+        
 
         try
         {
@@ -103,6 +105,13 @@ public partial class Cart : System.Web.UI.Page
                     cmd.ExecuteNonQuery();
                 }
             }
+            chkOut.Visible = false;
+            paypal.Visible = true;
         }
+    }
+    protected void btnPaypal_Click(object sender, EventArgs e)
+    {
+        string src1 = @"https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=jgdev2014@hotmail.com";
+        ScriptManager.RegisterStartupScript(this.btnChkOut, this.btnChkOut.GetType(), "Do the Paypal", "<script src='" + src1 + "' data-button='buynow' data-name='Total' data-amount='" + orderCost.ToString() + "' data-env='sandbox'></script>",false);
     }
 }
