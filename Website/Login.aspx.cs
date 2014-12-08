@@ -16,24 +16,15 @@ public partial class Login : System.Web.UI.Page
         {
             this.Session.Timeout = 5;
             Response.Redirect("Cart.aspx");
-            
+
         }
         else
         {
-            string err = "";
-            try { err = Request.QueryString["err"]; }
-            catch { err = ""; }
-            if (err != "")
-            {
-                if (err == "timeout")
-                    lblFailed.Text = "The Session Timed Out, Please Log In Again";
-            }
+            lblFailed.Text = "Either your session has expired, or you have not yet logged in";
         }
     }
     protected void btnLogin_Click(object sender, EventArgs e)
     {
-        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-        sw.Start();
         if (txtUser.Text != "" && txtUser.Text != null)
         {
             if (txtPass.Text != "" && txtPass.Text != null)
@@ -56,7 +47,7 @@ public partial class Login : System.Web.UI.Page
                     }
                 }
                 catch (Exception ex)
-                { 
+                {
                     lblFailed.Text = "Could not connect to database, or user name not found";
                     System.IO.File.AppendAllText(@"c:\web\log.txt", "Login - btnLogin :: " + ex.Message + Environment.NewLine);
                 }
@@ -66,16 +57,14 @@ public partial class Login : System.Web.UI.Page
                     {
                         if (txtPass.Text == passwrds[i])
                         {
-                            sw.Stop();
-                            System.IO.File.AppendAllText(@"c:\web\log.txt", "Login - btnLogin :: Total Time= " + sw.ElapsedMilliseconds + "ms" + Environment.NewLine);
                             this.Session["cID"] = custId[i];
                             this.Session.Timeout = 5;
                             Response.Redirect("Cart.aspx");
                         }
                     }
                 }
-                sw.Stop();
-                System.IO.File.AppendAllText(@"c:\web\log.txt", "Login - btnLogin :: Total Time= " + sw.ElapsedMilliseconds + "ms" + Environment.NewLine);
+                if (this.Session["cID"] == null)
+                    lblFailed.Text = "Incorrect password";
             }
         }
     }

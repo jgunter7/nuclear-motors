@@ -8,6 +8,8 @@
        {
     %>
     <div id="singleProd">
+        <form id="form2" runat="server">
+            <div class="center2">
         <table id="singleTbl">
             <tr>
                 <td colspan="3">
@@ -22,9 +24,11 @@
                 <td>Current Price:</td>
                 <td>
                     <asp:Label ID="prodPrice" runat="server" /></td>
-                <td>Add to Cart!</td>
+                <td><asp:Panel ID="buttonHere" runat="server"></asp:Panel></td>
             </tr>
         </table>
+                </div>
+            </form>
     </div>
 <%}
        else

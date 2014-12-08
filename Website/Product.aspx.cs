@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 
 public partial class Product : System.Web.UI.Page
 {
+    string connStr = "";
     protected void Page_Load(object sender, EventArgs e)
     {
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -17,7 +18,7 @@ public partial class Product : System.Web.UI.Page
         int pId = 0;
         try { pId = int.Parse(Request.QueryString["pId"]); }
         catch { pId = 0; }
-        string connStr = ConfigurationManager.ConnectionStrings["jgcon"].ConnectionString;
+        connStr = ConfigurationManager.ConnectionStrings["jgcon"].ConnectionString;
         try
         {
             SqlConnection curCon = new SqlConnection(connStr);
@@ -56,6 +57,7 @@ public partial class Product : System.Web.UI.Page
                     tRow = new TableRow();
                     tCell = new TableCell();
                     tCell.Controls.Add(curName);
+                    tCell.Height = 50;
                     tCell.ColumnSpan = 2;
                     tRow.Cells.Add(tCell);
                     main.Rows.Add(tRow);
@@ -68,7 +70,8 @@ public partial class Product : System.Web.UI.Page
                     tRow.Cells.Add(tCell);
                     main.Rows.Add(tRow);
                     main.Style.Add("display", "inline-flex");
-                    main.Style.Add("width", "380px");
+                    main.Style.Add("width", "300px");
+                    main.Style.Add("height", "300px");
                     main.Style.Add("text-align", "center");
                     pnlAllProd.Controls.Add(main);
                 }
@@ -87,16 +90,109 @@ public partial class Product : System.Web.UI.Page
                 reader.Close();
             }
             curCon.Close();
+            Button addC = new Button();
+            addC.ID = pId.ToString();
+            addC.Text = "Add to Cart";
+            addC.Click += addCart_Click;
+            buttonHere.Controls.Add(addC);
         }
-        catch (Exception ex) { System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: " + ex.Message + Environment.NewLine); }
-        sw.Stop();
-        System.IO.File.AppendAllText(@"c:\web\log.txt", "Product - Page_Load :: Total Time= " + sw.ElapsedMilliseconds + "ms" + Environment.NewLine);
+        catch (Exception ex) { //Add error to text field
+        }
     }
 
-    private void addCart_Click(object sender, EventArgs e)
+    public void addCart_Click(object sender, EventArgs e)
     {
         Button btn = (Button)sender;
         string prodId = btn.ID;
+        int cId = 0;
+        try { cId = int.Parse(this.Session["cID"].ToString()); }
+        catch { cId = 0; }
+        if (cId == 0)
+            Response.Redirect("Login.aspx");
+        AddToCart(prodId, cId);
 
+    }
+
+    private void AddToCart(string prodId, int cId)
+    {
+        SqlConnection curCon = new SqlConnection(connStr);
+        curCon.Open();
+        SqlCommand cmd = new SqlCommand("select * from tblOrders where custId = @custId AND closed is null Order BY orderId DESC", curCon);
+        cmd.Parameters.Add(new SqlParameter("@custId", cId));
+        SqlDataReader reader;
+        reader = cmd.ExecuteReader();
+        if (reader.Read() == false)
+        {
+            using (SqlConnection con1 = new SqlConnection(connStr))
+            {
+                using (SqlCommand cmd4 = new SqlCommand("Insert into tblOrders (created,closed,orderTotal,custId) Values (@create, @close, @total, @cus)", con1))
+                {
+                    cmd4.Parameters.AddWithValue("@create", System.DateTime.Today.ToShortDateString());
+                    cmd4.Parameters.AddWithValue("@close", DBNull.Value);
+                    cmd4.Parameters.AddWithValue("@total", 0.00M);
+                    cmd4.Parameters.AddWithValue("@cus", cId);
+                    con1.Open();
+                    cmd4.ExecuteNonQuery();
+                }
+            }
+            AddToCart(prodId, cId);
+        }
+        int orderId = int.Parse(reader["orderId"].ToString());
+        decimal orderTotal = decimal.Parse(reader["orderTotal"].ToString());
+        reader.Close();
+        cmd = new SqlCommand("select productPrice from tblProducts where productId = @pId", curCon);
+        cmd.Parameters.Add(new SqlParameter("@pId", prodId));
+        reader = cmd.ExecuteReader();
+        reader.Read();
+        orderTotal += decimal.Parse(reader["productPrice"].ToString());
+        reader.Close();
+        cmd = new SqlCommand("select quantity from tblOrderLine where productId = @pId AND orderId = @ord", curCon);
+        cmd.Parameters.Add(new SqlParameter("@pId",prodId));
+        cmd.Parameters.Add(new SqlParameter("@ord", orderId));
+        reader = cmd.ExecuteReader();
+        int quantity = 0;
+        if (reader.Read())  
+            quantity = int.Parse(reader["quantity"].ToString());
+        reader.Close();
+        curCon.Close();
+        if (quantity > 0)
+        {
+            quantity++;
+            using (SqlConnection con3 = new SqlConnection(connStr))
+            {
+                using (SqlCommand cmd4 = new SqlCommand("Update tblOrderLine SET quantity = @quan WHERE productId = @pId AND orderId = @ord", con3))
+                {
+                    cmd4.Parameters.AddWithValue("@quan", quantity);
+                    cmd4.Parameters.AddWithValue("@pId", prodId);
+                    cmd4.Parameters.AddWithValue("@ord", orderId);
+                    con3.Open();
+                    cmd4.ExecuteNonQuery();
+                }
+            }
+        }
+        else
+        {
+            using (SqlConnection con = new SqlConnection(connStr))
+            {
+                using (SqlCommand cmd2 = new SqlCommand("Insert into tblOrderLine (orderId, productId,quantity) Values (@ord, @prod, 1)", con))
+                {
+                    cmd2.Parameters.AddWithValue("@ord", orderId);
+                    cmd2.Parameters.AddWithValue("@prod", prodId);
+                    con.Open();
+                    cmd2.ExecuteNonQuery();
+                }
+            }
+        }
+        using (SqlConnection con2 = new SqlConnection(connStr))
+        {
+            using (SqlCommand cmd3 = new SqlCommand("Update tblOrders SET orderTotal = @total WHERE orderId = @ord", con2))
+            {
+                cmd3.Parameters.AddWithValue("@total", orderTotal);
+                cmd3.Parameters.AddWithValue("@ord", orderId);
+                con2.Open();
+                cmd3.ExecuteNonQuery();
+            }
+        }
+        Response.Redirect("Cart.aspx");
     }
 }
