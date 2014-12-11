@@ -32,6 +32,7 @@ public partial class Login : System.Web.UI.Page
                 string connStr = ConfigurationManager.ConnectionStrings["jgcon"].ConnectionString;
                 List<string> passwrds = new List<string>();
                 List<string> custId = new List<string>();
+                List<string> custName = new List<string>();
                 try
                 {
                     SqlConnection curCon = new SqlConnection(connStr);
@@ -44,6 +45,7 @@ public partial class Login : System.Web.UI.Page
                     {
                         custId.Add(reader["custId"].ToString());
                         passwrds.Add(reader["password"].ToString());
+                        custName.Add(reader["fName"].ToString());
                     }
                 }
                 catch (Exception ex)
@@ -58,6 +60,7 @@ public partial class Login : System.Web.UI.Page
                         if (txtPass.Text == passwrds[i])
                         {
                             this.Session["cID"] = custId[i];
+                            this.Session["cName"] = custName[i];
                             this.Session.Timeout = 5;
                             Response.Redirect("Cart.aspx");
                         }

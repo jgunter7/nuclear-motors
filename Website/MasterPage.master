@@ -189,6 +189,9 @@
     </script>
     <!-- SLIDE CONTROL FOR MENU-->    
     </div>
+    <div id="login">
+        <asp:Label ID="loginText" runat="server"></asp:Label>
+    </div>
     <asp:ContentPlaceHolder ID="content" runat="server" />
 </body>
 </html>
