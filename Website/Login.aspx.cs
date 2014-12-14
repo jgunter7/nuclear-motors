@@ -7,6 +7,9 @@ using System.Web.UI.WebControls;
 using System.Configuration;
 using System.Data.Sql;
 using System.Data.SqlClient;
+using System.Web.Security;
+using System.Text;
+using System.Security.Cryptography;
 
 public partial class Login : System.Web.UI.Page
 {
@@ -16,12 +19,26 @@ public partial class Login : System.Web.UI.Page
         {
             this.Session.Timeout = 5;
             Response.Redirect("Cart.aspx");
-
         }
         else
         {
             lblFailed.Text = "Either your session has expired, or you have not yet logged in";
         }
+    }
+    public static string CreateMD5(string input)
+    {
+        // Use input string to calculate MD5 hash
+        MD5 md5 = System.Security.Cryptography.MD5.Create();
+        byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+        byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+        // Convert the byte array to hexadecimal string
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < hashBytes.Length; i++)
+        {
+            sb.Append(hashBytes[i].ToString("X2"));
+        }
+        return sb.ToString();
     }
     protected void btnLogin_Click(object sender, EventArgs e)
     {
@@ -29,10 +46,12 @@ public partial class Login : System.Web.UI.Page
         {
             if (txtPass.Text != "" && txtPass.Text != null)
             {
+
                 string connStr = ConfigurationManager.ConnectionStrings["jgcon"].ConnectionString;
-                List<string> passwrds = new List<string>();
-                List<string> custId = new List<string>();
-                List<string> custName = new List<string>();
+                string passwrds = "";
+                string custId = "";
+                string custName = "";
+                string passW = CreateMD5(txtPass.Text);
                 try
                 {
                     SqlConnection curCon = new SqlConnection(connStr);
@@ -41,29 +60,23 @@ public partial class Login : System.Web.UI.Page
                     cmd.Parameters.Add(new SqlParameter("@user", txtUser.Text));
                     SqlDataReader reader;
                     reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        custId.Add(reader["custId"].ToString());
-                        passwrds.Add(reader["password"].ToString());
-                        custName.Add(reader["fName"].ToString());
-                    }
+                    reader.Read();
+                    custId = (reader["custId"].ToString());
+                    passwrds = (reader["password"].ToString());
+                    custName = (reader["fName"].ToString());
                 }
                 catch (Exception ex)
                 {
                     lblFailed.Text = "Could not connect to database, or user name not found";
-                    System.IO.File.AppendAllText(@"c:\web\log.txt", "Login - btnLogin :: " + ex.Message + Environment.NewLine);
                 }
-                if (passwrds.Count > 0)
+                if (passwrds != "")
                 {
-                    for (int i = 0; i < passwrds.Count; i++)
+                    if (passW == passwrds)
                     {
-                        if (txtPass.Text == passwrds[i])
-                        {
-                            this.Session["cID"] = custId[i];
-                            this.Session["cName"] = custName[i];
-                            this.Session.Timeout = 5;
-                            Response.Redirect("Cart.aspx");
-                        }
+                        this.Session["cID"] = custId;
+                        this.Session["cName"] = custName;
+                        this.Session.Timeout = 5;
+                        Response.Redirect("Cart.aspx");
                     }
                 }
                 if (this.Session["cID"] == null)
