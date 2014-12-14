@@ -25,21 +25,6 @@ public partial class Login : System.Web.UI.Page
             lblFailed.Text = "Either your session has expired, or you have not yet logged in";
         }
     }
-    public static string CreateMD5(string input)
-    {
-        // Use input string to calculate MD5 hash
-        MD5 md5 = System.Security.Cryptography.MD5.Create();
-        byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-        byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-        // Convert the byte array to hexadecimal string
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < hashBytes.Length; i++)
-        {
-            sb.Append(hashBytes[i].ToString("X2"));
-        }
-        return sb.ToString();
-    }
     protected void btnLogin_Click(object sender, EventArgs e)
     {
         if (txtUser.Text != "" && txtUser.Text != null)
@@ -51,7 +36,7 @@ public partial class Login : System.Web.UI.Page
                 string passwrds = "";
                 string custId = "";
                 string custName = "";
-                string passW = CreateMD5(txtPass.Text);
+                string passW = GlobalFunctions.CreateMD5(txtPass.Text);
                 try
                 {
                     SqlConnection curCon = new SqlConnection(connStr);

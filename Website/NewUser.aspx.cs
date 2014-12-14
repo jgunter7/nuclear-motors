@@ -20,21 +20,6 @@ public partial class NewUser : System.Web.UI.Page
             Response.Redirect("Cart.aspx");
         }
     }
-    public static string CreateMD5(string input)
-    {
-        // Use input string to calculate MD5 hash
-        MD5 md5 = System.Security.Cryptography.MD5.Create();
-        byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-        byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-        // Convert the byte array to hexadecimal string
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < hashBytes.Length; i++)
-        {
-            sb.Append(hashBytes[i].ToString("X2"));
-        }
-        return sb.ToString();
-    }
     protected void btnCreateUser_Click(object sender, EventArgs e)
     {
         if (txtUser.Text != "")
@@ -56,7 +41,7 @@ public partial class NewUser : System.Web.UI.Page
                 {
                     using (SqlCommand cmd2 = new SqlCommand("Insert into tblCustomers (username,password,fName) Values (@un, @up, @name)", con1))
                     {
-                        string passW = CreateMD5(txtPass.Text);
+                        string passW = GlobalFunctions.CreateMD5(txtPass.Text);
                         cmd2.Parameters.AddWithValue("@un", txtUser.Text);
                         cmd2.Parameters.AddWithValue("@up", passW);
                         cmd2.Parameters.AddWithValue("@name", txtName.Text);
