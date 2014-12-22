@@ -99,7 +99,7 @@ public partial class Cart : System.Web.UI.Page
             {
                 using (SqlCommand cmd = new SqlCommand("Update tblOrders SET closed = @closed WHERE orderId = @ord", con))
                 {
-                    cmd.Parameters.AddWithValue("@closed", System.DateTime.Today.ToShortDateString());
+                    cmd.Parameters.AddWithValue("@closed", System.DateTime.Now);
                     cmd.Parameters.AddWithValue("@ord", orderId);
                     con.Open();
                     cmd.ExecuteNonQuery();

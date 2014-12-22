@@ -13,8 +13,6 @@ public partial class Product : System.Web.UI.Page
     string connStr = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-        sw.Start();
         int pId = 0;
         try { pId = int.Parse(Request.QueryString["pId"]); }
         catch { pId = 0; }
@@ -37,7 +35,8 @@ public partial class Product : System.Web.UI.Page
                 while (reader.Read())
                 {
                     Button addCart = new Button();
-                    addCart.Text = "Add to Cart!";
+                    //addCart.Text = "Add to Cart!";
+                    addCart.CssClass = "Cart";
                     addCart.ID = reader["productId"].ToString();
                     addCart.Click += addCart_Click;
                     Label curName = new Label();
@@ -92,7 +91,8 @@ public partial class Product : System.Web.UI.Page
             curCon.Close();
             Button addC = new Button();
             addC.ID = pId.ToString();
-            addC.Text = "Add to Cart";
+            //addC.Text = "Add to Cart";
+            addC.CssClass = "Cart";
             addC.Click += addCart_Click;
             buttonHere.Controls.Add(addC);
         }
@@ -127,7 +127,7 @@ public partial class Product : System.Web.UI.Page
             {
                 using (SqlCommand cmd4 = new SqlCommand("Insert into tblOrders (created,closed,orderTotal,custId) Values (@create, @close, @total, @cus)", con1))
                 {
-                    cmd4.Parameters.AddWithValue("@create", System.DateTime.Today.ToShortDateString());
+                    cmd4.Parameters.AddWithValue("@create", System.DateTime.Now);
                     cmd4.Parameters.AddWithValue("@close", DBNull.Value);
                     cmd4.Parameters.AddWithValue("@total", 0.00M);
                     cmd4.Parameters.AddWithValue("@cus", cId);

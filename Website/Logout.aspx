@@ -9,7 +9,7 @@
 <body>
     <form id="form1" runat="server">
     <div>
-    Loggin Off..... One Moment Please....
+    Logging Off..... One Moment Please....
     </div>
     </form>
 </body>

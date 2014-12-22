@@ -54,3 +54,22 @@
     display:block;
     width:85%;
 }
+#login {
+    color:white;
+    text-align:center;
+    font-size:16pt;
+    display:block;
+    background-color: #47A3DA;
+}
+.Cart {
+	background-image:url(../img/submit.png);
+	border: 0;
+    width: 100px;
+    height: 18px;
+}
+.Cart:hover {
+	background-image:url(../img/submit1.png);
+    border: 0;
+    width: 100px;
+    height: 18px;
+}
