@@ -35,15 +35,13 @@
                 <li>
                     <div class="description">
                         <h2>About Us</h2>
-                        <p>The people behind Nuclear Motors belong to COMP 229 : Advanced Web Application Development, Section 062, Group 2.</p>
+                        <p>The people behind Nuclear Motors belong to COMP 229 : Advanced Web Application Development. A course @ Centennial COllege. The code has been forked and developed to its current state.</p>
                         <ul>
-                        <li>John Dimitriadis</li>
-                        <li>Jason Gunter</li>
-                        <li>George Savchenko</li>
-                        <li>Elaine Mae Villarino</li><br></ul>
-                        <p>Professor : Joanne Filotti</p>
+                        <li>Design: ------</li>
+                        <li>Code / Server Implementation: Myself</li><br></ul>
                         <p>Centennial College</p>
                         <p>Fall 2014</p>
+<p>For more information, email jgdev2014@hotmail.com.</p>
                     </div>
                     <div class="tiltview col">
                         <a href="#">
